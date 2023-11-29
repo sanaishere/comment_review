@@ -1,0 +1,10 @@
+const express=require('express')
+const router=express.Router()
+const authentication=require('../authentication/authentication')
+const authorization=require('../authentication/authorization')
+const {createreview,updatereview,averageratings,getreview}=require('../controllers/reviewcontroller')
+router.post('/',authentication,authorization,createreview)
+router.put('/:id',authentication,authorization,updatereview)
+router.get('/:id',averageratings)
+router.get('/',getreview)
+module.exports=router;
