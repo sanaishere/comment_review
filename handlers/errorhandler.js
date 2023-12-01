@@ -1,14 +1,11 @@
 
 const { StatusCodes } = require('http-status-codes');
-const errorhandler = (err, req, res, next) => {
-  // console.log(err);
-  let customError = {
-    // set default
-    statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-    msg: err.message || 'Something went wrong try again later',
-  };
+
+const errorhandler = function(err, req, res, next) {
+  
   
 
-  return res.status(customError.statusCode).json({ msg: customError.msg });
+   res.status(500).json({ msg: 'something went wrong',err });
+   
 };
 module.exports=errorhandler
