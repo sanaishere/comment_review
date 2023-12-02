@@ -28,12 +28,32 @@ if(!token){
 
 const decoded=jwt.verify(token,process.env.JWT_SECRET)
 if(!decoded){
-           throw new Error('token is probably wrong')
+    ApiResult={
+           
+        "result": {
+                   "error_code": "UnAuthorized",
+                   "error_message":"توکن اشتباه است",
+                   "errors": ""
+               },
+               "data": "" 
+
+}
+return res.status(401).send(ApiResult)
 }
 req.user_id=decoded.user_id
 req.role_id=decoded.role_id
 }catch(err){
-    return res.status(500).send(err)
+    ApiResult={
+           
+        "result": {
+                   "error_code": "ExpiredSignatureError",
+                   "error_message":"کاربر عزیز لطفا دوباره لاگین شوید",
+                   "errors": ""
+               },
+               "data": "" 
+
+}
+return res.status(401).send(ApiResult)  
 }
 
 next();

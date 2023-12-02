@@ -16,7 +16,16 @@ ApiResult={
 return res.status(403).send(ApiResult)
 }
 }catch(err){
-    return res.status(500).send(err)
+    ApiResult={
+        "result": {
+                   "error_code": "PermissionDenied",
+                   "error_message": err.message,
+                   "errors": ""
+               },
+               "data": ""
+        
+        }
+        return res.status(403).send(ApiResult)   
 }
 next();
 

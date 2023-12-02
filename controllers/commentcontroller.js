@@ -1,12 +1,21 @@
 const pool=require('../connection/connect')
 require('express-async-errors')
-
+const Joi=require('joi')
 const createcomment=async(req,res)=>{
   
 
 const {bookId,comment}=req.body
-if(!bookId||!comment){
-  throw new Error('need bookid and comment')
+const{error,data}=validating({bookId,comment})
+if(error){
+  const ApiResult={
+    "result": {
+               "error_code": "clienterror",
+               "error_message":error ,
+               "errors": ""
+           },
+           "data": ""
+} 
+return res.status(400).send(ApiResult)
 }
 
 else{
@@ -18,15 +27,35 @@ let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VA
 '${isDelete}','${createdDate}')`
 
  pool.query(query,(err,data)=>{
+
+ 
+  
   
            if(err){
-            throw new Error(err)
+            
+            const ApiResult={
+              "result": {
+                         "error_code": "databaseerror",
+                         "error_message":  err.detail,
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+          return res.status(500).send(ApiResult)
            } else{
-            res.status(201).send(data.rows)
+            const ApiResult={
+              "result": {
+                         "error_code": "",
+                         "error_message":"" ,
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+           return  res.status(200).send(ApiResult)
            }
           
 }) 
- } //res.status(201).send(data.rows)
+ } 
 }
 
 const getcomments=async(req,res)=>{
@@ -34,13 +63,24 @@ const getcomments=async(req,res)=>{
           //  if(!req.query.pageindex){
           //    pageIndex=1;
           //  }
-            pageIndex=req.query.pageindex?parseInt(req.query.pageindex):1
+            pageIndex=req.query.page?parseInt(req.query.page):1
+            const bookId=parseInt(req.params.id)
+           
+         
+          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false `,(err,result)=>{
+          if(err){
+            const ApiResult={
+              "result": {
+                         "error_code": "databaseerror",
+                         "error_message":  err.detail,
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+          return res.status(500).send(ApiResult)
 
-           const bookid=parseInt(req.params.id)
-          if(!bookid){
-            throw new Error('bookid is required')
           }
-           const result= await pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookid} AND IsDelete=false `)
+          
            if(result.rowCount==0){
                   const ApiResult={
                       "result": {
@@ -50,7 +90,7 @@ const getcomments=async(req,res)=>{
                              },
                              "data": ""
                   }  
-                  return res.status(400) .send(ApiResult) 
+                  return res.status(404) .send(ApiResult) 
            }else{
             let sum
             const rowcounts=result.rowCount
@@ -86,30 +126,78 @@ const getcomments=async(req,res)=>{
          
             res.status(200).send(ApiResult)}
           }
-           
+          )}
            
 
 
 const deletecomment=async(req,res)=>{
-           const commentId=parseInt(req.params.id)
-           if(!commentId){
-            throw new Error('commentid is required')
-          }
+  let result
+           let commentId=await req.params.id
+           commentId=parseInt(commentId)
+          
            const userId=req.user_id
-           const userofcomment=await pool.query(`SELECT UserId FROM Comments WHERE id=${commentId}`)
+//            await pool.query(`SELECT * FROM Comments WHERE id=${commentId} AND UserId=${userId}`)
+//             .catch(err=>{
+//               console.log(err) 
+              
+//           return res.status(500).json({"result": {
+//               "error_code": "database error",
+//               "error_message": err,
+//               "errors": ""
+//           },
+//           "data": ""
+// } )}).then(e=>{result=e})
+// console.log(result)
+// if(result.rows.length===0){
+//   return res.status(500).json({"result": {
+//     "error_code": "database error",
+//     "error_message": "cannot get property of undefined",
+//     "errors": ""
+// },
+// "data": ""
+// } )
+// }
+
            
           
           
-            //if(!(parseInt(userId)===parseInt(userofcomment.rows[0].userid))){
-                     // return res.status(500).send('cant delet this comment cause you did not write it')
-            //}
-           const result=await pool.query(`UPDATE Comments SET IsDelete=true WHERE id=${commentId} AND UserId=${userId}`)
-          if(result){
-            res.status(200).json({data:'successfully deleted'})
-          }}
+            
+            pool.query(`UPDATE Comments SET IsDelete=true WHERE id=${commentId} AND UserId=${userId}`,(err,result)=>{
+          if(err){
+            const ApiResult={
+              "result": {
+                         "error_code": "databaseerror",
+                         "error_message":  err.detail,
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+          return res.status(500).send(ApiResult)
+          }
+          
+           if(result){
+            const ApiResult={
+              "result": {
+                         "error_code": "",
+                         "error_message": "",
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+           return res.status(200).send(ApiResult)
+          }
+        })
+        }
           
       
 
-
+          function validating({bookId,comment}){
+            const schema=Joi.object({
+                     bookId:  Joi.number().required(),
+                     comment:Joi.required(),
+                    
+            })
+            return schema.validate({bookId,comment})
+ }
 
 module.exports={createcomment,getcomments,deletecomment}
