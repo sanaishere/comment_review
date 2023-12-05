@@ -9,7 +9,7 @@ const errorhandler=require('./handlers/errorhandler')
 const commentroutes=require('./routers/commentrouter')
 const reviewroutes=require('./routers/reviewrouter')
 
-const PORT=6000
+const PORT=6001
 
 
           
