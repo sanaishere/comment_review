@@ -60,10 +60,9 @@ let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VA
 
 const getcomments=async(req,res)=>{
   let pageIndex
-          //  if(!req.query.pageindex){
-          //    pageIndex=1;
-          //  }
-            pageIndex=req.query.page?parseInt(req.query.page):1
+            
+           // pageIndex=req.query.page?parseInt(req.query.page):1
+           pageIndex=parseInt(req.query.page)
             const bookId=parseInt(req.params.id)
            
          
