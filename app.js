@@ -13,33 +13,29 @@ const errorhandler=require('./handlers/errorhandler')
 const commentroutes=require('./routers/commentrouter')
 const reviewroutes=require('./routers/reviewrouter')
 
-const PORT=6001
+const PORT=6002
 
-const corsOptions = {
-  origin: 'http://localhost:6001/',
-  credentials: true,
-  
-}
-app.set('trust proxy', 1);
-app.use(morgan('tiny'))  
-app.use(helmet()) 
+const corsOptions={origin:'*', credentials :  true,  methods: 'GET,PUT,POST,DELETE,OPTIONS',exposeHeaders:['Authorization']}
 
-app.use(cors(corsOptions))  
-app.options('*',cors())
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', "http://localhost:6001");
-  res.header('Access-Control-Allow-Headers', true);
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  next();
+app.use(cors(corsOptions))
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization");
+next();
 });
+ 
+
 //app.use(express.json({extended:false}))
+
 app.use(body_parser.json())
 app.use(body_parser.urlencoded({extended:true}))
 
 
 app.use('/api/book/comments',commentroutes)
 app.use('/api/book/reviews',reviewroutes)
+
+
 app.use(notfound)
 
 

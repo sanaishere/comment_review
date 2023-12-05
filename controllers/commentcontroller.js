@@ -59,6 +59,8 @@ let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VA
 }
 
 const getcomments=async(req,res)=>{
+  
+
   let pageIndex
             
            // pageIndex=req.query.page?parseInt(req.query.page):1
@@ -122,7 +124,7 @@ const getcomments=async(req,res)=>{
                                 }
                 
                  //result.rows.slice(indexdata,rowcounts)           
-         
+                 
             res.status(200).send(ApiResult)}
           }
           )}
