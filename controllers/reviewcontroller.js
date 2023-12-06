@@ -109,7 +109,16 @@ const getreview=async(req,res)=>{
         throw new Error('bookid required')
     }
     const reviews=await pool.query(`SELECT * FROM Reviews WHERE BookId=${bookId}`)
- return res.status(201).send(reviews.rows)
+    const ApiResult={
+        "result": {
+                   "error_code": "",
+                   "error_message": "",
+                   "errors": ""
+               },
+               "data" :{"reviewCount":
+                reviews.rowCount}
+    } 
+ return res.status(200).send(ApiResult)
 }
            
            
