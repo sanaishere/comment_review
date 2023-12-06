@@ -6,5 +6,5 @@ const {createreview,updatereview,averageratings,getreview}=require('../controlle
 router.post('/',authentication,authorization,createreview)
 router.put('/:id',authentication,authorization,updatereview)
 router.get('/:id',averageratings)
-router.get('/',getreview)
+router.get('/getreviewcount',getreview)
 module.exports=router;
