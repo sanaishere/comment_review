@@ -3,8 +3,35 @@ require('express-async-errors')
 const pool=require('../connection/connect')
 
 const createreview=async(req,res)=>{
+
+
 let resulttest
            const {bookId,rating}=await req.body
+           const userId=req.user_id
+           let testuserbooks=`SELECT * FROM UserBooks WHERE UserId=${userId} AND BookId=${bookId}`
+           await pool.query(testuserbooks).catch(err=>{
+             console.log(err) 
+             
+           return res.status(500).json({"result": {
+             "error_code": "database error",
+             "error_message": err,
+             "errors": ""
+           },
+           "data": ""
+           } )}).then(item=>{ resbook=item})
+           
+           if(resbook.rowCount===0){
+           return res.status(400).json({"result": {
+           "error_code": "database error",
+           "error_message": "شما این کتاب را تهیه نکرده اید.",
+           "errors": ""
+           },
+           "data": ""
+           } )
+           }
+           
+
+
            let query
           const {error,data}= validating({bookId,rating})
           if(error){
@@ -18,7 +45,7 @@ let resulttest
                 }  
                 return res.status(400).send(ApiResult)
           }
-           const userId=req.user_id
+           
            let test=`SELECT id FROM Reviews WHERE UserId=${userId} AND BookId=${bookId}`
            await pool.query(test).catch(err=>{
                 console.log(err) 
@@ -116,7 +143,26 @@ const getreview=async(req,res)=>{
                    "errors": ""
                },
                "data" :{"reviewCount":
-                reviews.rowCount}
+                reviews.rowCount,
+            }
+    } 
+ return res.status(200).send(ApiResult)
+}
+const getreviewall=async(req,res)=>{
+
+    const bookId=req.body.bookid
+    if(!bookId){
+        throw new Error('bookid required')
+    }
+    const reviews=await pool.query(`SELECT * FROM Reviews `)
+    const ApiResult={
+        "result": {
+                   "error_code": "",
+                   "error_message": "",
+                   "errors": ""
+               },
+               "data" :reviews.rows
+            
     } 
  return res.status(200).send(ApiResult)
 }
@@ -207,11 +253,11 @@ const updatereview=async(req,res)=>{
 }
 }
 const averageratings=async(req,res)=>{
-let bookid=await req.params.id
-bookid=parseInt(bookid)
+let bookId=await req.params.id
+bookId=parseInt(bookId)
 
     
-let query=`SELECT AVG(Rating) FROM Reviews WHERE BookId=${bookid}`
+let query=`SELECT AVG(Rating) FROM Reviews WHERE BookId=${bookId}`
 pool.query(query,(err,data)=>{
            if(err){
             const ApiResult={
@@ -231,14 +277,14 @@ pool.query(query,(err,data)=>{
             },
             "data": ""
     } )
-    //        }else if(data.rows[0].avg==null){
-    //         return res.status(500).json({"result": {
-    //             "error_code": "database error",
-    //             "error_message": "not find with given bookid",
-    //             "errors": ""
-    //         },
-    //         "data": ""
-    // } )
+           }else if(data.rows[0].avg==null){
+            return res.status(200).json({"result": {
+                "error_code": "",
+                "error_message": "",
+                "errors": ""
+            },
+            "data": 0
+    } )
             }
           
 else{
@@ -267,4 +313,4 @@ function validating({bookId,rating}){
            
            return schema.validate({bookId,rating})
 }
-module.exports={createreview,updatereview,averageratings,getreview}
+module.exports={createreview,updatereview,averageratings,getreview,getreviewall}

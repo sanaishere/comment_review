@@ -23,6 +23,30 @@ const isDelete=false;
 const userId=req.user_id
 const createdDate= new Date().toISOString();
 
+let resbook
+let test=`SELECT * FROM UserBooks WHERE UserId=${userId} AND BookId=${bookId}`
+await pool.query(test).catch(err=>{
+  console.log(err) 
+  
+return res.status(500).json({"result": {
+  "error_code": "database error",
+  "error_message": err,
+  "errors": ""
+},
+"data": ""
+} )}).then(item=>{ resbook=item})
+
+if(resbook.rowCount===0){
+return res.status(400).json({"result": {
+"error_code": "database error",
+"error_message": "شما این کتاب را تهیه نکرده اید.",
+"errors": ""
+},
+"data": ""
+} )
+}
+
+
 let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VALUES('${bookId}','${userId}','${comment}',
 '${isDelete}','${createdDate}')`
 
@@ -82,16 +106,16 @@ const getcomments=async(req,res)=>{
 
           }
           
-           if(result.rowCount==0){
+           if(result.rowCount===0){
                   const ApiResult={
                       "result": {
-                                 "error_code": "CommentsNotFound",
-                                 "error_message": "کامنتی برای این کتاب وجود ندارد",
+                                 "error_code": "",
+                                 "error_message":"",
                                  "errors": ""
                              },
                              "data": ""
                   }  
-                  return res.status(404) .send(ApiResult) 
+                  return res.status(200) .send(ApiResult) 
            }else{
             let sum
             const rowcounts=result.rowCount
@@ -132,9 +156,9 @@ const getcomments=async(req,res)=>{
 
 
 const deletecomment=async(req,res)=>{
-  let result
-           let commentId=await req.params.id
-           commentId=parseInt(commentId)
+ 
+           const commentId= parseInt(req.params.id)
+          
           
            const userId=req.user_id
 //            await pool.query(`SELECT * FROM Comments WHERE id=${commentId} AND UserId=${userId}`)
@@ -175,8 +199,20 @@ const deletecomment=async(req,res)=>{
           }  
           return res.status(500).send(ApiResult)
           }
-          
-           if(result){
+          if(result.rowCount===0){
+            console.log(result)
+            const ApiResult={
+              "result": {
+                         "error_code": "databaseeeror",
+                         "error_message": "شما نمی توانید این کامنت را پاک کنید.",
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+           return res.status(400).send(ApiResult)
+          }
+           if(result.rowCount>0){
+            console.log(result)
             const ApiResult={
               "result": {
                          "error_code": "",
