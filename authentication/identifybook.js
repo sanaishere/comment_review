@@ -19,7 +19,7 @@ return res.status(500).json({"result": {
 if(uresidofreview.rows.length===0){
 return res.status(404).json({"result": {
 "error_code": "database error",
-"error_message": "no book find with this id",
+"error_message": "کتابی با این آیدی پیدا نشد.",
 "errors": ""
 },
 "data": ""

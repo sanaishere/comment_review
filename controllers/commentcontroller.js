@@ -92,7 +92,7 @@ const getcomments=async(req,res)=>{
             const bookId=parseInt(req.params.id)
            
          
-          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false `,(err,result)=>{
+          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false ORDER BY CreatedDate DESC `,(err,result)=>{
           if(err){
             const ApiResult={
               "result": {
