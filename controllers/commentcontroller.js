@@ -121,10 +121,10 @@ else{
                        "error_message": "",
                        "errors": ""
                    },
-                   "data":{
-                       " data":result.rows,
+                   "data"
+                       :result.rows,
                        
-                       }
+                       
                       }
       
        //result.rows.slice(indexdata,rowcounts)           
