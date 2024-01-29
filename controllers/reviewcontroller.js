@@ -131,10 +131,11 @@ let resulttest
 }
 const getreview=async(req,res)=>{
 
-    const bookId=req.body.bookid
+    let bookId=parseInt(req.body.bookid);
     if(!bookId){
         throw new Error('bookid required')
     }
+    bookId=parseInt(bookId);
     const reviews=await pool.query(`SELECT * FROM Reviews WHERE BookId=${bookId}`)
     const ApiResult={
         "result": {
@@ -142,30 +143,14 @@ const getreview=async(req,res)=>{
                    "error_message": "",
                    "errors": ""
                },
-               "data" :{"reviewCount":
-                reviews.rowCount,
+               "data" :
+                reviews.rows,
+               
             }
-    } 
+    
  return res.status(200).send(ApiResult)
-}
-const getreviewall=async(req,res)=>{
+        }
 
-    const bookId=req.body.bookid
-    if(!bookId){
-        throw new Error('bookid required')
-    }
-    const reviews=await pool.query(`SELECT * FROM Reviews `)
-    const ApiResult={
-        "result": {
-                   "error_code": "",
-                   "error_message": "",
-                   "errors": ""
-               },
-               "data" :reviews.rows
-            
-    } 
- return res.status(200).send(ApiResult)
-}
            
            
 const updatereview=async(req,res)=>{
@@ -313,4 +298,4 @@ function validating({bookId,rating}){
            
            return schema.validate({bookId,rating})
 }
-module.exports={createreview,updatereview,averageratings,getreview,getreviewall}
+module.exports={createreview,updatereview,averageratings,getreview}

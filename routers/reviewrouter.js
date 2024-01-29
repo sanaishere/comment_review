@@ -7,5 +7,5 @@ const {identifybook}=require('../authentication/identifybook')
 router.post('/',authentication,authorization,identifybook,createreview)
 router.put('/:id',authentication,authorization,updatereview)
 router.get('/:id',identifybook,averageratings)
-router.get('/getreviewcount',getreview)
+router.get('/getreview',getreview)
 module.exports=router;
