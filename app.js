@@ -34,7 +34,7 @@ app.use(body_parser.urlencoded({extended:true}))
 
 app.use('/api/book/comments',commentroutes)
 app.use('/api/book/reviews',reviewroutes)
-
+//app.use('/api/publisher/comments',commentroutes);
 
 app.use(notfound)
 

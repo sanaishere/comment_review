@@ -81,7 +81,57 @@ let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VA
 }) 
  } 
 }
+const getcommentspub=async(req,res)=>{
+  const bookId=parseInt(req.params.id)
+           
+         
+          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false ORDER BY CreatedDate DESC `,(err,result)=>{
+          if(err){
+            const ApiResult={
+              "result": {
+                         "error_code": "databaseerror",
+                         "error_message":  err.detail,
+                         "errors": ""
+                     },
+                     "data": ""
+          }  
+          return res.status(500).send(ApiResult)
 
+          }
+          
+           if(result.rowCount===0){
+                  const ApiResult={
+                      "result": {
+                                 "error_code": "",
+                                 "error_message":"",
+                                 "errors": ""
+                             },
+                             "data": ""
+                  }  
+                  return res.status(200) .send(ApiResult) 
+     
+                  
+
+}
+else{
+  
+      const ApiResult={
+            "result": {
+                       "error_code": "",
+                       "error_message": "",
+                       "errors": ""
+                   },
+                   "data":{
+                       " data":result.rows,
+                       
+                       }
+                      }
+      
+       //result.rows.slice(indexdata,rowcounts)           
+       
+  res.status(200).send(ApiResult)}
+}
+)}
 const getcomments=async(req,res)=>{
   
 
@@ -237,4 +287,4 @@ const deletecomment=async(req,res)=>{
             return schema.validate({bookId,comment})
  }
 
-module.exports={createcomment,getcomments,deletecomment}
+module.exports={createcomment,getcomments,deletecomment,getcommentspub}
