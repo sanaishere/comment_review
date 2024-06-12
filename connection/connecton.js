@@ -9,7 +9,7 @@ const client={
                      db:{
                       user: 'admin',
                       host: 'postgres-db',
-                      database: 'BookLandDB',
+                      database: 'bookLand_db',
                       password: 'password',
                       port: '5432',
                      }

@@ -2,7 +2,7 @@
 const pool=require('../connection/connect')
 const identifybook=async(req,res,next)=>{
 const bookId=req.body.bookId?req.body.bookId:req.params.id;
-let query={text:`SELECT * FROM Books WHERE id=$1`,values:[bookId]}
+let query={text:`SELECT * FROM books WHERE id=$1`,values:[bookId]}
 
 let uresidofreview
 await pool.query(query).catch(err=>{

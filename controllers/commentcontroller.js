@@ -24,7 +24,7 @@ const userId=req.user_id
 const createdDate= new Date().toISOString();
 
 let resbook
-let test=`SELECT * FROM UserBooks WHERE UserId=${userId} AND BookId=${bookId}`
+let test=`SELECT * FROM user_books WHERE user_id=${userId} AND book_id=${bookId}`
 await pool.query(test).catch(err=>{
   console.log(err) 
   
@@ -47,7 +47,7 @@ return res.status(400).json({"result": {
 }
 
 
-let query=`INSERT INTO  Comments (BookId,UserId,Comment,IsDelete,CreatedDate) VALUES('${bookId}','${userId}','${comment}',
+let query=`INSERT INTO  comments (book_id,user_id,comment,is_delete,created_date) VALUES('${bookId}','${userId}','${comment}',
 '${isDelete}','${createdDate}')`
 
  pool.query(query,(err,data)=>{
@@ -85,7 +85,7 @@ const getcommentspub=async(req,res)=>{
   const bookId=parseInt(req.params.id)
            
          
-          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false ORDER BY CreatedDate DESC `,(err,result)=>{
+          pool.query(`SELECT c.id,book_id,comment,created_date,username FROM comments c  JOIN users u  ON c.user_id=u.id WHERE book_id=${bookId} AND is_delete=false ORDER BY  created_date DESC `,(err,result)=>{
           if(err){
             const ApiResult={
               "result": {
@@ -142,7 +142,8 @@ const getcomments=async(req,res)=>{
             const bookId=parseInt(req.params.id)
            
          
-          pool.query(`SELECT c.id,BookId,Comment,CreatedDate,Username FROM Comments c  JOIN Users u  ON c.UserId=u.id WHERE BookId=${bookId} AND IsDelete=false ORDER BY CreatedDate DESC `,(err,result)=>{
+          pool.query(`SELECT c.id,book_id,comment, created_date,username FROM comments c  JOIN users u  ON c.user_id=u.id WHERE 
+          book_id=${bookId} AND is_delete=false ORDER BY  created_date DESC `,(err,result)=>{
           if(err){
             const ApiResult={
               "result": {
@@ -237,7 +238,7 @@ const deletecomment=async(req,res)=>{
           
           
             
-            pool.query(`UPDATE Comments SET IsDelete=true WHERE id=${commentId} AND UserId=${userId}`,(err,result)=>{
+            pool.query(`UPDATE comments SET is_delete=true WHERE id=${commentId} AND user_id=${userId}`,(err,result)=>{
           if(err){
             const ApiResult={
               "result": {

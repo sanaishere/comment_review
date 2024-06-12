@@ -8,7 +8,7 @@ const createreview=async(req,res)=>{
 let resulttest
            const {bookId,rating}=await req.body
            const userId=req.user_id
-           let testuserbooks=`SELECT * FROM UserBooks WHERE UserId=${userId} AND BookId=${bookId}`
+           let testuserbooks=`SELECT * FROM user_books WHERE user_id=${userId} AND book_id=${bookId}`
            await pool.query(testuserbooks).catch(err=>{
              console.log(err) 
              
@@ -46,7 +46,7 @@ let resulttest
                 return res.status(400).send(ApiResult)
           }
            
-           let test=`SELECT id FROM Reviews WHERE UserId=${userId} AND BookId=${bookId}`
+           let test=`SELECT id FROM reviews WHERE user_id=${userId} AND book_id=${bookId}`
            await pool.query(test).catch(err=>{
                 console.log(err) 
             return res.status(500).json({"result": {
@@ -59,7 +59,7 @@ let resulttest
  console.log(resulttest)
            if(resulttest.rowCount>0){
             console.log('before did it')
-            query=`UPDATE Reviews SET Rating=${rating} WHERE id=${resulttest.rows[0].id} AND UserId=${userId}`
+            query=`UPDATE reviews SET rating=${rating} WHERE id=${resulttest.rows[0].id} AND user_id=${userId}`
             pool.query(query,(err,data)=>{
                 if(err){
                   const ApiResult={
@@ -104,7 +104,7 @@ let resulttest
            //}
            else{
            const createdDate= new Date().toISOString();
-            query=`INSERT INTO  Reviews (BookId,UserId,Rating,CreatedAt) VALUES('${bookId}','${userId}','${rating}','${createdDate}')`
+            query=`INSERT INTO  reviews (book_id,user_id,rating,created_at) VALUES('${bookId}','${userId}','${rating}','${createdDate}')`
  pool.query(query,(err,data)=>{
            if(err){
             const ApiResult={
@@ -136,7 +136,7 @@ const getreview=async(req,res)=>{
         throw new Error('bookid required')
     }
     bookId=parseInt(bookId);
-    const reviews=await pool.query(`SELECT * FROM Reviews WHERE BookId=${bookId}`)
+    const reviews=await pool.query(`SELECT * FROM reviews WHERE book_id=${bookId}`)
     const ApiResult={
         "result": {
                    "error_code": "",
@@ -159,7 +159,7 @@ const updatereview=async(req,res)=>{
            let ApiResult
     
            const userId=req.user_id
-           let query={text:`SELECT UserId FROM Reviews WHERE id=$1`, values:[reviewid]}
+           let query={text:`SELECT user_id FROM reviews WHERE id=$1`, values:[reviewid]}
            let uresidofreview
               await pool.query(query).catch(err=>{
                 console.log(err) 
@@ -190,7 +190,7 @@ const updatereview=async(req,res)=>{
         
            const {rating}=req.body
        
-           if(!(parseInt(userId)===parseInt(uresidofreview.rows[0].userid))){
+           if(!(parseInt(userId)===parseInt(uresidofreview.rows[0].user_id))){
           const ApiResult={
                       "result":{
                       "error_code": "UpdateReviewError",
@@ -205,7 +205,7 @@ const updatereview=async(req,res)=>{
            }
            else{
             //try{
-           let query=`UPDATE Reviews SET Rating=${rating} WHERE id=${reviewid} AND UserId=${userId}`
+           let query=`UPDATE reviews SET rating=${rating} WHERE id=${reviewid} AND user_id=${userId}`
 
         
 
@@ -242,7 +242,7 @@ let bookId=await req.params.id
 bookId=parseInt(bookId)
 
     
-let query=`SELECT AVG(Rating) FROM Reviews WHERE BookId=${bookId}`
+let query=`SELECT AVG(rating) FROM reviews WHERE book_id=${bookId}`
 pool.query(query,(err,data)=>{
            if(err){
             const ApiResult={
