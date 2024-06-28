@@ -1,0 +1,202 @@
+{
+	"info": {
+		"_postman_id": "8faa477f-f55e-40eb-a336-9ff4b561d107",
+		"name": "comment_review_",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26951773",
+		"_collection_link": "https://grey-desert-398480.postman.co/workspace/cc7020f6-67fb-44c1-849f-ae5a68eb6771/collection/26951773-8faa477f-f55e-40eb-a336-9ff4b561d107?action=share&source=collection_link&creator=26951773"
+	},
+	"item": [
+		{
+			"name": "comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlX2lkIjoxLCJleHAiOjE3MTk1MDQ5NjJ9.JBqTZQltPItA94_anm3fBMkXcm5JGmGSbapC2HPlzD0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n     \"bookId\":7,\r\n    \"comment\":\"baram jaleb bood\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:6002/api/book/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"comments"
+					]
+				},
+				"description": "this is for creating comment"
+			},
+			"response": []
+		},
+		{
+			"name": "deletecomment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJyb2xlX2lkIjoyLCJleHAiOjE3MTk1MTYwNjF9.DuGhONbdVGOP1H1yAQeg64YsnNSq8OKecKymbyXV8sk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6002/api/book/comments/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"comments",
+						"10"
+					]
+				},
+				"description": "this api is for deleting comment with commentId"
+			},
+			"response": []
+		},
+		{
+			"name": "getcomment_publisher",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6002/api/book/comments/publisher/7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"comments",
+						"publisher",
+						"7"
+					]
+				},
+				"description": "this api is for getting comments in publisher panel"
+			},
+			"response": []
+		},
+		{
+			"name": "create review",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJyb2xlX2lkIjoxLCJleHAiOjE3MTk1MTY3NzB9.ZofudS2CIKcSO9_rASUCHeZqV1t9S6PbzABj2WTRxmE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rating\":1,\r\n    \"bookId\":5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:6002/api/book/reviews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"reviews"
+					]
+				},
+				"description": "this is for rating book"
+			},
+			"response": []
+		},
+		{
+			"name": "getreview",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6002/api/book/reviews/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"reviews",
+						"5"
+					]
+				},
+				"description": "this api returns average rating for bookId"
+			},
+			"response": []
+		},
+		{
+			"name": "get_comments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6002/api/book/comments/7?page=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6002",
+					"path": [
+						"api",
+						"book",
+						"comments",
+						"7"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				},
+				"description": "this api getting comments of bookid ,it is paginated"
+			},
+			"response": []
+		}
+	]
+}
