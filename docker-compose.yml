@@ -15,6 +15,7 @@ services:
       - my_network
     ports:
       - "6002:6002"
+    command: npm start
     
 
 networks:
